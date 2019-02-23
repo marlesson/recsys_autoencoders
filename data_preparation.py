@@ -62,10 +62,10 @@ def run(min_interactions, test_size, factor_negative_sample):
   print("# size of test dataset: %d" % len(interactions_test_df))
 
 
-  interactions_full_df.to_csv('./data/interactions_full_df.csv', index = False)
-  interactions_train_df.to_csv('./data/interactions_train_df.csv', index = False)
-  interactions_test_df.to_csv('./data/interactions_test_df.csv', index = False)
-  articles_df.to_csv('./data/articles_df.csv', index = False)
+  interactions_full_df[['user_id','content_id','game','hours','view']].to_csv('./data/interactions_full_df.csv', index = False)
+  interactions_train_df[['user_id','content_id','game','hours','view']].to_csv('./data/interactions_train_df.csv', index = False)
+  interactions_test_df[['user_id','content_id','game','hours','view']].to_csv('./data/interactions_test_df.csv', index = False)
+  articles_df[['content_id', 'game','total_users','total_hours']].to_csv('./data/articles_df.csv', index = False)
 
 def filter_interactions(interactions_df, min_interactions):
   '''
