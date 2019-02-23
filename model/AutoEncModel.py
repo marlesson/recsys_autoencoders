@@ -36,7 +36,7 @@ class AutoEncModel(BaseModel):
     Create a Input to Model
     '''
 
-    X, y = user_item_matrix, user_item_matrix
+    X, y = user_item_matrix.values, user_item_matrix.values
 
     return X, y
 

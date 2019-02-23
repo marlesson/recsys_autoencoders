@@ -35,11 +35,11 @@ class CDAEModel(BaseModel):
     '''
     Create a Input to Model
     '''
-    users_ids  = list(user_content_matrix.index)
+    users_ids  = list(user_item_matrix.index)
     x_user_ids = np.array(users_ids).reshape(len(users_ids), 1)
     
-    X = [user_item_matrix, x_user_ids]
-    y = user_item_matrix
+    X = [user_item_matrix.values, x_user_ids]
+    y = user_item_matrix.values
 
     return X, y
 

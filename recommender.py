@@ -12,13 +12,13 @@ from evaluation.model_evaluator import *
 # main
 # ----------------------------------------------
 @click.command(help="Recommender Matrix Fatorization Model")
-@click.option("--model", type=click.Choice(['auto_enc', 'cdae']))
+@click.option("--name", type=click.Choice(['auto_enc', 'cdae', 'auto_enc_content']))
 @click.option("--model_path", type=click.STRING)
 @click.option("--user_id", type=click.INT, default=1)
 @click.option("--topn", type=click.INT, default=10)
 @click.option("--view", type=click.INT, default=0)
 @click.option("--output", type=click.STRING, default='./data/predict.csv')
-def run(model, model_path, user_id, topn, view, output):
+def run(name, model_path, user_id, topn, view, output):
   
   # Load Dataset
   articles_df, _n, interactions_hist, _n2, _n3 = load_dataset()
@@ -34,18 +34,18 @@ def run(model, model_path, user_id, topn, view, output):
   users_items_matrix    = users_items_matrix_df.values
   users_ids             = list(users_items_matrix_df.index)
 
-  if model == 'cdae':
-    _model = CDAEModel()
-  elif model == 'auto_enc':
-    _model = AutoEncModel()
-  elif model == 'auto_enc_content':
-    _model = AutoEncContentModel()
+  if name == 'cdae':
+    model = CDAEModel()
+  elif name == 'auto_enc':
+    model = AutoEncModel()
+  elif name == 'auto_enc_content':
+    model = AutoEncContentModel()
 
   # Input - Prepare input layer
-  X, y   = _model.data_preparation(interactions_hist, users_items_matrix)
+  X, y   = model.data_preparation(interactions_hist, users_items_matrix_df)
 
   # Keras Model
-  model  = mlflow.keras.load_model(model_path)     
+  model  = mlflow.keras.load_model(model_path)
 
   # Predict
   if view == 0: # New Predic

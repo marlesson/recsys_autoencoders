@@ -10,7 +10,7 @@ conda_env: conda.yaml
 entry_points:
   main:
     parameters: 
-      model:    {type: string, default: 'auto_enc'}
+      name:    {type: string, default: 'auto_enc'}
       factors:  {type: int, default: 15}
       layers:   {type: string, default: '[128,256,128]'}    
       epochs:   {type: int, default: 100}    
@@ -20,7 +20,7 @@ entry_points:
       lr:       {type: float, default: 0.0001}    
       reg:      {type: float, default: 0.01}    
     command: "python train.py 
-                  --model {model}
+                  --name {name}
                   --factors {factors}
                   --layers {layers}
                   --epochs {epochs}
@@ -42,88 +42,3 @@ entry_points:
   
   popularity_train:
     command: "python popularity_train.py"
-
-  svd_model_train:
-    parameters: 
-      factors: {type: int, default: 15}    
-    command: "python svd_model_train.py --factors {factors}"
-
-  autoencoder_model_train:
-    parameters: 
-      layers: {type: string, default: '[128,256,128]'}    
-      epochs: {type: int, default: 100}    
-      batch:  {type: int, default: 64}    
-      activation: {type: string, default: 'selu'}    
-      dropout: {type: float, default: 0.8}    
-      lr: {type: float, default: 0.0001}    
-    command: "python autoencoder_model_train.py 
-                  --layers {layers}
-                  --epochs {epochs}
-                  --batch {batch}
-                  --activation {activation}
-                  --dropout {dropout}
-                  --lr {lr}"
-
-  cdae_model_train:
-    parameters: 
-      factors:  {type: int, default: 15}
-      epochs:   {type: int, default: 100}    
-      batch:    {type: int, default: 64}    
-      activation: {type: string, default: 'selu'}    
-      dropout:  {type: float, default: 0.8}    
-      lr:       {type: float, default: 0.0001}    
-      reg:      {type: float, default: 0.01}    
-    command: "python cdae_model_train.py 
-                  --factors {factors}
-                  --epochs {epochs}
-                  --batch {batch}
-                  --activation {activation}
-                  --dropout {dropout}
-                  --lr {lr}
-                  --reg {reg}"
-
-  vae_model_train:
-    parameters: 
-      layers:   {type: int, default: 100}
-      factors:  {type: int, default: 15}
-      epochs:   {type: int, default: 100}    
-      batch:    {type: int, default: 64}    
-      activation: {type: string, default: 'selu'}    
-      dropout:  {type: float, default: 0.6}    
-      lr:       {type: float, default: 0.0001}    
-    command: "python vae_model_train.py 
-                  --layers {layers}
-                  --factors {factors}
-                  --epochs {epochs}
-                  --batch {batch}
-                  --activation {activation}
-                  --dropout {dropout}
-                  --lr {lr}"
-
-  mlp_model_train:
-    parameters: 
-      layers:   {type: string, default: '[16,8]'}    
-      activation: {type: string, default: 'selu'}    
-      epochs:   {type: int, default: 10}    
-      batch:    {type: int, default: 64}    
-      factors:  {type: int, default: 10}    
-      dropout:  {type: float, default: 0.2}    
-      lr: {type: float, default: 0.001}    
-    command: "python mlp_model_train.py 
-                  --activation {activation}
-                  --layers {layers}
-                  --epochs {epochs}
-                  --batch {batch}
-                  --factors {factors}
-                  --dropout {dropout}
-                  --lr {lr}"
-  
-  als_model_train:
-    parameters: 
-      max_iter:   {type: int, default: 10}    
-      reg_param:  {type: float, default: 0.1}    
-      rank:       {type: int, default: 10}    
-    command: "python als_model_train.py 
-                  --max_iter {max_iter}
-                  --reg_param {reg_param}
-                  --rank {rank}"

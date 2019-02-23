@@ -57,7 +57,7 @@ class AutoEncContentModel(BaseModel):
       return ' '.join(tokens)
 
     #  Order users in matrix interactions
-    users_ids  = list(user_content_matrix.index)
+    users_ids  = list(user_item_matrix.index)
     
     # Dataset with User X Content information
     user_games = interactions.groupby('user_id')['game'].apply(list).loc[users_ids].reset_index()
@@ -68,8 +68,8 @@ class AutoEncContentModel(BaseModel):
     padded_tokens  = pad_sequences(encoded_tokens, maxlen=max_length, padding='post')
 
     # Input  
-    X = [user_item_matrix, padded_tokens]
-    y = user_item_matrix
+    X = [user_item_matrix.values, padded_tokens]
+    y = user_item_matrix.values
 
     return X, y
 

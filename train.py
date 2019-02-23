@@ -35,7 +35,7 @@ SCORE_VALUES_PATH   = './artefacts/score_plot.png'
 # main
 # ----------------------------------------------
 @click.command(help="Autoencoder Matrix Fatorization Model")
-@click.option("--model", type=click.Choice(['auto_enc', 'cdae', 'auto_enc_content']))
+@click.option("--name", type=click.Choice(['auto_enc', 'cdae', 'auto_enc_content']))
 @click.option("--factors", type=click.INT, default=10)
 @click.option("--layers", type=click.STRING, default='[128,256,128]')
 @click.option("--epochs", type=click.INT, default=10)
@@ -44,7 +44,7 @@ SCORE_VALUES_PATH   = './artefacts/score_plot.png'
 @click.option("--dropout", type=click.FLOAT, default=0.6)
 @click.option("--lr", type=click.FLOAT, default=0.001)
 @click.option("--reg", type=click.FLOAT, default=0.001)
-def run(model, factors, layers, epochs, batch, activation, dropout, lr, reg):
+def run(name, factors, layers, epochs, batch, activation, dropout, lr, reg):
   
   # Load Dataset
   articles_df, interactions_full_df, \
@@ -59,28 +59,28 @@ def run(model, factors, layers, epochs, batch, activation, dropout, lr, reg):
                                                       columns = 'content_id', 
                                                       values  = 'view').fillna(0)
   # Data
-  users_items_matrix    = users_items_matrix_df.as_matrix()
+  users_items_matrix    = users_items_matrix_df.values
   users_ids             = list(users_items_matrix_df.index)
 
-  if model == 'cdae':
+  if name == 'cdae':
     model = CDAEModel(factors, epochs, batch, activation, dropout, lr, reg)
-  elif model == 'auto_enc':
+  elif name == 'auto_enc':
     model = AutoEncModel(layers, epochs, batch, activation, dropout, lr, reg)
-  elif model == 'auto_enc_content':
+  elif name == 'auto_enc_content':
     model = AutoEncContentModel(layers, epochs, batch, activation, dropout, lr, reg)
 
   # ---------------------------------------------
   # Input - Prepare input layer
-  X, y  = model.data_preparation(interactions_train_df, users_items_matrix)
+  X, y  = model.data_preparation(interactions_train_df, users_items_matrix_df)
 
   # Train
-  k_model, hist  = model.fit(X, y)
+  k_model, hist = model.fit(X, y)
 
   # Predict
-  pred_score     = model.predict(X)
+  pred_score    = model.predict(X)
 
   # converting the reconstructed matrix back to a Pandas dataframe
-  cf_preds_df = pd.DataFrame(pred_score, 
+  cf_preds_df   = pd.DataFrame(pred_score, 
                               columns = users_items_matrix_df.columns, 
                               index=users_ids).transpose()
   
@@ -124,7 +124,7 @@ def run(model, factors, layers, epochs, batch, activation, dropout, lr, reg):
     mlflow.log_artifact(SCORE_VALUES_PATH, "evaluation")
 
     #model
-    mlflow.keras.log_model(k_model, "model")
+    mlflow.keras.log_model(k_model, name)
 
 def print_model_summary(model):
   # Save model summary
