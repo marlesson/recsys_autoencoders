@@ -70,7 +70,7 @@ class ModelEvaluator:
     print('Running evaluation for users')
     people_recs     = []
     recs_content_id  = []
-    users           = list(self.interactions_test_indexed_df.index.unique().values)[:500]
+    users           = list(self.interactions_test_indexed_df.sample(frac=1).index.unique().values)[:500]
     len_users       = len(users)
 
     for idx, person_id in enumerate(users):

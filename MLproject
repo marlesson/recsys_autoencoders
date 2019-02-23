@@ -40,8 +40,8 @@ entry_points:
                       --test_size {test_size}
                       --factor_negative_sample {factor_negative_sample}"
   
-  popularity_model_train:
-    command: "python popularity_model_train.py"
+  popularity_train:
+    command: "python popularity_train.py"
 
   svd_model_train:
     parameters: 
