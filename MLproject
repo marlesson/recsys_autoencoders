@@ -10,7 +10,9 @@ conda_env: conda.yaml
 entry_points:
   main:
     parameters: 
+      model:    {type: string, default: 'auto_enc'}
       factors:  {type: int, default: 15}
+      layers:   {type: string, default: '[128,256,128]'}    
       epochs:   {type: int, default: 100}    
       batch:    {type: int, default: 64}    
       activation: {type: string, default: 'selu'}    
@@ -18,7 +20,9 @@ entry_points:
       lr:       {type: float, default: 0.0001}    
       reg:      {type: float, default: 0.01}    
     command: "python train.py 
+                  --model {model}
                   --factors {factors}
+                  --layers {layers}
                   --epochs {epochs}
                   --batch {batch}
                   --activation {activation}

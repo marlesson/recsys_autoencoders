@@ -85,14 +85,18 @@ class ModelEvaluator:
     print("evaluations...")
 
     detailed_results_df = pd.DataFrame(people_recs)
-    ndcg_at_5       = metrics.ndcg_at(detailed_results_df['recommender'].values, detailed_results_df['labels'].values, k=5)
-    ndcg_at_10      = metrics.ndcg_at(detailed_results_df['recommender'].values, detailed_results_df['labels'].values, k=10)
-    coverage        = metrics.coverage(detailed_results_df['recommender'].values, self.articles_df['content_id'].values)/100
-    personalization = metrics.personalization(detailed_results_df['recommender'].values)
+    predictions = detailed_results_df['recommender'].values
+    labels      = detailed_results_df['labels'].values
 
-    global_metrics = {'modelName':       model.get_model_name(),
-                      'ndcg_at.5':       ndcg_at_5,
+    ndcg_at_5       = metrics.ndcg_at(predictions, labels, k=5)
+    ndcg_at_10      = metrics.ndcg_at(predictions, labels, k=10)
+    mean_average_precision = metrics.mean_average_precision(predictions, labels)
+    coverage        = metrics.coverage(predictions, self.articles_df['content_id'].values)/100
+    personalization = metrics.personalization(predictions)
+
+    global_metrics = {'ndcg_at.5':       ndcg_at_5,
                       'ndcg_at.10':      ndcg_at_10,
+                      'MAP':             mean_average_precision,
                       'converge':        coverage,
                       'personalization': personalization }    
     

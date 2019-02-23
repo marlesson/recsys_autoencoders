@@ -34,7 +34,7 @@ class CDAEModel(BaseModel):
     model = self.build_model(X)
 
     model.compile(optimizer = Adam(lr=self.lr), 
-                    loss='mean_absolute_error')#'mean_absolute_error'
+                    loss='mse')#'mean_absolute_error'
 
     # train
     hist = model.fit(x=X, y=y,
