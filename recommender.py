@@ -6,6 +6,7 @@ import mlflow.keras
 from util import *
 from model.CDAEModel import *
 from model.AutoEncModel import *
+from model.AutoEncContentModel import *
 from evaluation.model_evaluator import *
 
 # main
@@ -33,21 +34,23 @@ def run(model, model_path, user_id, topn, view, output):
   users_items_matrix    = users_items_matrix_df.values
   users_ids             = list(users_items_matrix_df.index)
 
-  # Load Model
   if model == 'cdae':
-    # Input  
-    X = [[users_items_matrix], [user_id]]
+    _model = CDAEModel()
   elif model == 'auto_enc':
-    # Input  
-    X = [users_items_matrix]
-    
-  # Model
-  model       = mlflow.keras.load_model(model_path)     
+    _model = AutoEncModel()
+  elif model == 'auto_enc_content':
+    _model = AutoEncContentModel()
+
+  # Input - Prepare input layer
+  X, y   = _model.data_preparation(interactions_hist, users_items_matrix)
+
+  # Keras Model
+  model  = mlflow.keras.load_model(model_path)     
 
   # Predict
-  if view == 0:
+  if view == 0: # New Predic
     pred_score  = model.predict(X) * (X[0] == view)
-  else:
+  else: # User Interactive Hist
     pred_score  = users_items_matrix
 
 

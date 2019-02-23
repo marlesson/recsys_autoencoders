@@ -4,14 +4,14 @@ import math
 import numpy as np
 import seaborn as sns
   
-def load_dataset(with_cartesian = False):
-  articles_df           = pd.read_csv('./data/articles_df.csv')
-  interactions_full_df  = pd.read_csv('./data/interactions_full_df.csv')
-  interactions_train_df = pd.read_csv('./data/interactions_train_df.csv')
-  interactions_test_df  = pd.read_csv('./data/interactions_test_df.csv')
+def load_dataset(base_path = './data/', with_cartesian = False):
+  articles_df           = pd.read_csv(base_path+'articles_df.csv')
+  interactions_full_df  = pd.read_csv(base_path+'interactions_full_df.csv')
+  interactions_train_df = pd.read_csv(base_path+'interactions_train_df.csv')
+  interactions_test_df  = pd.read_csv(base_path+'interactions_test_df.csv')
   
   if with_cartesian:
-    cartesian_product_df  = pd.read_csv('./data/cartesian_product_df.csv')
+    cartesian_product_df  = pd.read_csv(base_path+'cartesian_product_df.csv')
   else:
     cartesian_product_df  = None
 

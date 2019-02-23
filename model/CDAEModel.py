@@ -19,7 +19,8 @@ class CDAEModel(BaseModel):
         The 9th ACM International Conference on Web Search and Data Mining (WSDM'16), p153--162, 2016.  
   '''
 
-  def __init__(self, factors, epochs, batch, activation, dropout, lr, reg):
+  def __init__(self, factors = None, epochs = None, batch = None, 
+                      activation = None, dropout = None, lr = None, reg = None):
     self.factors = factors
     self.epochs  = epochs
     self.batch   = batch
@@ -28,6 +29,19 @@ class CDAEModel(BaseModel):
     self.lr      = lr
     self.reg     = reg
     self.model   = None
+
+
+  def data_preparation(self, interactions, user_item_matrix):
+    '''
+    Create a Input to Model
+    '''
+    users_ids  = list(user_content_matrix.index)
+    x_user_ids = np.array(users_ids).reshape(len(users_ids), 1)
+    
+    X = [user_item_matrix, x_user_ids]
+    y = user_item_matrix
+
+    return X, y
 
   def fit(self, X, y):
     # Build model
@@ -49,6 +63,7 @@ class CDAEModel(BaseModel):
     self.model = model
 
     return model, hist
+
 
   def predict(self, X):
 

@@ -9,10 +9,13 @@ from keras import initializers
 from keras.layers import add
 from model.BaseModel import BaseModel
 import numpy as np
+from keras.preprocessing.text import one_hot
+from keras.preprocessing.sequence import pad_sequences
 
-class AutoEncModel(BaseModel):
+class AutoEncContentModel(BaseModel):
   '''
-  create model
+  Model adapted from Auto Encoder With Content Base Information
+
   Reference:
     KUCHAIEV, Oleksii; GINSBURG, Boris. Training deep autoencoders for collaborative filtering. 
     arXiv preprint arXiv:1708.01715, 2017. 
@@ -30,16 +33,45 @@ class AutoEncModel(BaseModel):
     self.lr      = lr
     self.reg     = reg
     self.model   = None
+        
 
   def data_preparation(self, interactions, user_item_matrix):
     '''
     Create a Input to Model
     '''
 
-    X, y = user_item_matrix, user_item_matrix
+    # Params
+    #   integer encode the documents
+    vocab_size   = 100
+    #   pad documents to a max length of 4 words
+    max_length   = 50
+
+
+    def split_str(val):
+      '''
+      Split and Join Array(Array(str))
+      '''
+      tokens = []
+      for v in val:
+          tokens.extend(v.split(' '))
+      return ' '.join(tokens)
+
+    #  Order users in matrix interactions
+    users_ids  = list(user_content_matrix.index)
+    
+    # Dataset with User X Content information
+    user_games = interactions.groupby('user_id')['game'].apply(list).loc[users_ids].reset_index()
+    user_games['tokens'] = user_games['game'].apply(split_str)
+
+    # Prepare input layer
+    encoded_tokens = [one_hot(d, vocab_size) for d in user_games.tokens]
+    padded_tokens  = pad_sequences(encoded_tokens, maxlen=max_length, padding='post')
+
+    # Input  
+    X = [user_item_matrix, padded_tokens]
+    y = user_item_matrix
 
     return X, y
-
 
   def fit(self, X, y):
     '''
@@ -81,11 +113,14 @@ class AutoEncModel(BaseModel):
     Autoencoder for Collaborative Filter Model
     '''
 
+    # Params
+    users_items_matrix, content_info = X
+
     # Input
-    input_layer = x = Input(shape=(X.shape[1],))
-    
+    input_layer   = x = Input(shape=(users_items_matrix.shape[1],))
+    input_content = Input(shape=(content_info.shape[1],))
+
     # Encoder
-    # -----------------------------
     k = int(len(self.layers)/2)
     i = 0
     for l in self.layers[:k]:
@@ -94,24 +129,32 @@ class AutoEncModel(BaseModel):
       i = i+1
 
     # Latent Space
-    # -----------------------------
     x = Dense(self.layers[k], activation=self.activation, 
                                 name='latent_space')(x)
+
+    # Content Information
+    x_content = Embedding(100, self.layers[k], 
+                        input_length=content_info.shape[1])(input_content)
+    x_content = Flatten()(x_content)
+    x_content = Dense(self.layers[k], activation=self.activation, 
+                                name='content_space')(x_content)
+    # Concatenate
+    x = add([x, x_content])
+
     # Dropout
     x = Dropout(self.dropout)(x)
 
     # Decoder
-    # -----------------------------
     for l in self.layers[k+1:]:
       i = i-1
       x = Dense(l, activation=self.activation, 
                       name='dec_{}'.format(i))(x)
 
     # Output
-    output_layer = Dense(X.shape[1], activation='linear', name='output')(x)
+    output_layer = Dense(users_items_matrix.shape[1], activation='linear', name='output')(x)
 
 
     # this model maps an input to its reconstruction
-    model = Model(input_layer, output_layer)
+    model = Model([input_layer, input_content], output_layer)
 
     return model

@@ -16,10 +16,13 @@ from keras import backend as K
 from keras import regularizers
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras import initializers
+from keras.preprocessing.text import one_hot
+from keras.preprocessing.sequence import pad_sequences
 
 from evaluation.model_evaluator import *
 from model.CDAEModel import *
 from model.AutoEncModel import *
+from model.AutoEncContentModel import *
 
 # Const
 TRAIN_HIST_PATH     = './artefacts/train_hist.png'
@@ -32,7 +35,7 @@ SCORE_VALUES_PATH   = './artefacts/score_plot.png'
 # main
 # ----------------------------------------------
 @click.command(help="Autoencoder Matrix Fatorization Model")
-@click.option("--model", type=click.Choice(['auto_enc', 'cdae']))
+@click.option("--model", type=click.Choice(['auto_enc', 'cdae', 'auto_enc_content']))
 @click.option("--factors", type=click.INT, default=10)
 @click.option("--layers", type=click.STRING, default='[128,256,128]')
 @click.option("--epochs", type=click.INT, default=10)
@@ -60,23 +63,15 @@ def run(model, factors, layers, epochs, batch, activation, dropout, lr, reg):
   users_ids             = list(users_items_matrix_df.index)
 
   if model == 'cdae':
-    # Input  
-    x_user_ids = np.array(users_ids).reshape(len(users_ids), 1)
-    X = [users_items_matrix, x_user_ids]
-    y = users_items_matrix
-    
-    # Model
     model = CDAEModel(factors, epochs, batch, activation, dropout, lr, reg)
-
   elif model == 'auto_enc':
-
-    # Input  
-    X, y = users_items_matrix, users_items_matrix
-    
-    # Model
     model = AutoEncModel(layers, epochs, batch, activation, dropout, lr, reg)
+  elif model == 'auto_enc_content':
+    model = AutoEncContentModel(layers, epochs, batch, activation, dropout, lr, reg)
 
   # ---------------------------------------------
+  # Input - Prepare input layer
+  X, y  = model.data_preparation(interactions_train_df, users_items_matrix)
 
   # Train
   k_model, hist  = model.fit(X, y)
