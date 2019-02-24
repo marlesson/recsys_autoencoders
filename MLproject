@@ -32,9 +32,9 @@ entry_points:
 
   data_preparation:
     parameters: 
-      min_interactions: {type: int, default: 5}
+      min_interactions:       {type: int, default: 5}
       factor_negative_sample: {type: int, default: 0}
-      test_size: {type: float, default: 0.2}
+      test_size:              {type: float, default: 0.2}
     command: "python data_preparation.py 
                       --min_interactions {min_interactions}
                       --test_size {test_size}

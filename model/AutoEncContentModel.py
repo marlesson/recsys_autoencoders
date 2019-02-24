@@ -117,29 +117,29 @@ class AutoEncContentModel(BaseModel):
     users_items_matrix, content_info = X
 
     # Input
-    input_layer   = x = Input(shape=(users_items_matrix.shape[1],))
-    input_content = Input(shape=(content_info.shape[1],))
+    input_layer   = x = Input(shape=(users_items_matrix.shape[1],), name='UserScore')
+    input_content = Input(shape=(content_info.shape[1],), name='Itemcontent')
 
     # Encoder
     k = int(len(self.layers)/2)
     i = 0
     for l in self.layers[:k]:
       x = Dense(l, activation=self.activation, 
-                      name='enc_{}'.format(i))(x)
+                      name='EncLayer{}'.format(i))(x)
       i = i+1
 
     # Latent Space
     x = Dense(self.layers[k], activation=self.activation, 
-                                name='latent_space')(x)
+                                name='UserLatentSpace')(x)
 
     # Content Information
     x_content = Embedding(100, self.layers[k], 
                         input_length=content_info.shape[1])(input_content)
     x_content = Flatten()(x_content)
     x_content = Dense(self.layers[k], activation=self.activation, 
-                                name='content_space')(x_content)
+                                name='ItemLatentSpace')(x_content)
     # Concatenate
-    x = add([x, x_content])
+    x = add([x, x_content], name='LatentSpace')
 
     # Dropout
     x = Dropout(self.dropout)(x)
@@ -148,10 +148,10 @@ class AutoEncContentModel(BaseModel):
     for l in self.layers[k+1:]:
       i = i-1
       x = Dense(l, activation=self.activation, 
-                      name='dec_{}'.format(i))(x)
+                      name='DecLayer{}'.format(i))(x)
 
     # Output
-    output_layer = Dense(users_items_matrix.shape[1], activation='linear', name='output')(x)
+    output_layer = Dense(users_items_matrix.shape[1], activation='linear', name='UserScorePred')(x)
 
 
     # this model maps an input to its reconstruction

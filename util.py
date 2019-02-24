@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import math
 import numpy as np
 import seaborn as sns
-  
+
 def load_dataset(base_path = './data/', with_cartesian = False):
   articles_df           = pd.read_csv(base_path+'articles_df.csv')
   interactions_full_df  = pd.read_csv(base_path+'interactions_full_df.csv')
@@ -37,6 +37,7 @@ def export_figure_matplotlib(arr, f_name, dpi=200, resize_fact=1, plt_show=False
       plt.show()
   else:
       plt.close()
+
 
 def plot_scores_values(values, f_name, plt_show=False):
 

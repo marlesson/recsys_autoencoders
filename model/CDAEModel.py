@@ -81,7 +81,7 @@ class CDAEModel(BaseModel):
     users_items_matrix, x_user_ids = X
 
     # Model
-    x_item = Input((users_items_matrix.shape[1],), name='x_item')
+    x_item = Input((users_items_matrix.shape[1],), name='UserScore')
     h_item = Dropout(self.dropout)(x_item)
     h_item = Dense(self.factors, 
                       kernel_regularizer=l2(self.reg), 
@@ -89,13 +89,13 @@ class CDAEModel(BaseModel):
                       activation=self.activation)(h_item)
 
     # dtype should be int to connect to Embedding layer
-    x_user = Input((1,), dtype='int32', name='x_user')
+    x_user = Input((1,), dtype='int32', name='UserContent')
     h_user = Embedding(len(np.unique(x_user_ids))+1,self.factors, 
                         input_length=1, 
                         embeddings_regularizer=l2(self.reg))(x_user)
     h_user = Flatten()(h_user)
 
-    h = add([h_item, h_user])
-    y = Dense(users_items_matrix.shape[1], activation='linear', name='x_item_pred')(h)
+    h = add([h_item, h_user], name='LatentSpace')
+    y = Dense(users_items_matrix.shape[1], activation='linear', name='UserScorePred')(h)
 
     return Model(inputs=[x_item, x_user], outputs=y)

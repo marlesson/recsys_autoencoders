@@ -82,7 +82,7 @@ class AutoEncModel(BaseModel):
     '''
 
     # Input
-    input_layer = x = Input(shape=(X.shape[1],))
+    input_layer = x = Input(shape=(X.shape[1],), name='UserScore')
     
     # Encoder
     # -----------------------------
@@ -90,25 +90,25 @@ class AutoEncModel(BaseModel):
     i = 0
     for l in self.layers[:k]:
       x = Dense(l, activation=self.activation, 
-                      name='enc_{}'.format(i))(x)
+                      name='EncLayer{}'.format(i))(x)
       i = i+1
 
     # Latent Space
     # -----------------------------
     x = Dense(self.layers[k], activation=self.activation, 
-                                name='latent_space')(x)
+                                name='LatentSpace')(x)
     # Dropout
-    x = Dropout(self.dropout)(x)
+    x = Dropout(self.dropout, name='Dropout')(x)
 
     # Decoder
     # -----------------------------
     for l in self.layers[k+1:]:
       i = i-1
       x = Dense(l, activation=self.activation, 
-                      name='dec_{}'.format(i))(x)
+                      name='DecLayer{}'.format(i))(x)
 
     # Output
-    output_layer = Dense(X.shape[1], activation='linear', name='output')(x)
+    output_layer = Dense(X.shape[1], activation='linear', name='UserScorePred')(x)
 
 
     # this model maps an input to its reconstruction

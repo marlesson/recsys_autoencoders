@@ -8,6 +8,7 @@ import mlflow.keras
 from util import *
 from contextlib import redirect_stdout
 
+import keras
 from keras.optimizers import Adam, RMSprop
 from keras.layers import Input, Dense, Embedding, Flatten, Dropout, merge, Activation
 from keras.models import Model
@@ -28,6 +29,7 @@ from model.AutoEncContentModel import *
 TRAIN_HIST_PATH     = './artefacts/train_hist.png'
 TRAIN_HIST_LOG_PATH = './artefacts/train_hist.json'
 MODEL_SUMMARY_PATH  = './artefacts/model_summary.txt'
+IMG_MODEL_SUMMARY_PATH  = './artefacts/model_summary.png'
 METRICS_LOG_PATH    = './artefacts/metrics.png'
 SCORE_VALUES_PATH   = './artefacts/score_plot.png'
 
@@ -120,6 +122,7 @@ def run(name, factors, layers, epochs, batch, activation, dropout, lr, reg):
     mlflow.log_artifact(TRAIN_HIST_PATH, "history")
     mlflow.log_artifact(TRAIN_HIST_LOG_PATH, "history")
     mlflow.log_artifact(MODEL_SUMMARY_PATH)
+    mlflow.log_artifact(IMG_MODEL_SUMMARY_PATH)
     mlflow.log_artifact(METRICS_LOG_PATH, "evaluation")
     mlflow.log_artifact(SCORE_VALUES_PATH, "evaluation")
 
@@ -129,6 +132,8 @@ def run(name, factors, layers, epochs, batch, activation, dropout, lr, reg):
 def print_model_summary(model):
   # Save model summary
   print(model.summary())
+  keras.utils.plot_model(model, to_file=IMG_MODEL_SUMMARY_PATH, show_shapes=True)
+
   with open(MODEL_SUMMARY_PATH, 'w') as f:
     with redirect_stdout(f):
         model.summary()
