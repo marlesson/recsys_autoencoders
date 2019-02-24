@@ -3,6 +3,5 @@ mlruns/*
 .ipynb_checkpoints
 data/*
 !data/raw
-artefacts/*
 derby.log
 metastore_db

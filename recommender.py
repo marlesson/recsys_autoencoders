@@ -45,7 +45,7 @@ def run(name, model_path, user_id, topn, view, output):
   X, y   = model.data_preparation(interactions_hist, users_items_matrix_df)
 
   # Keras Model
-  model  = mlflow.keras.load_model(model_path)
+  model  = mlflow.keras.load_model(model_path+name)
 
   # Predict
   if view == 0: # New Predic

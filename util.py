@@ -43,7 +43,8 @@ def plot_scores_values(values, f_name, plt_show=False):
 
   fig = plt.figure(figsize=(10,4))
 
-  ax = sns.boxplot(x=values)
+  #ax = sns.boxplot(x=values)
+  ax = sns.distplot(values)
   #ax = sns.swarmplot(x=values, color=".25")
   plt.savefig(f_name, dpi=(200))
   if plt_show:

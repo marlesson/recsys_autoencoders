@@ -42,3 +42,19 @@ entry_points:
   
   popularity_train:
     command: "python popularity_train.py"
+
+  recommender:
+    parameters:
+      name:    {type: string, default: 'selu'}
+      model_path: {type: string, default: 'selu'}
+      user_id: {type: int, default: 1}
+      topn:    {type: int, default: 10}
+      view:    {type: int, default: 0}
+      output:  {type: string, default: './data/predict.csv'}
+    command: "python recommender.py 
+                      --name {name}
+                      --model_path {model_path}
+                      --user_id {user_id}
+                      --topn {topn}
+                      --view {view}
+                      --output {output}"      
