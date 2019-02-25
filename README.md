@@ -115,21 +115,86 @@ Options:
   --reg FLOAT
 ```
 
-Command to execute the training of the "Deep AutoEncoder for Collaborative Filtering" model:
+#### Implemented Recommender Models
+
+**This is an adapted implementation of the original article, simplifying some features for a better understanding of the models.**
+
+##### 1. Popularity Model
+
+This model makes recommendations using the most popular games, the ones that had the most purchases in a period. This recommendation is not personalized, that is, it is the same for all users
+
+This is a Base Model that will be used to compare with AutoEncoders Models. 
+
+Run training:
+```
+$ mlflow run . -e popularity_train
+```
+
+##### 2. CDAE - Collaborative Denoising Auto-Encoders for Top-N Recommender Systems
+
+> Yao Wu, Christopher DuBois, Alice X. Zheng, Martin Ester. 
+> Collaborative Denoising Auto-Encoders for Top-N Recommender Systems.
+> The 9th ACM International Conference on Web Search and Data Mining (WSDM'16), p153--162, 2016.  
+> http://alicezheng.org/papers/wsdm16-cdae.pdf
+
+Run training:
+```
+$ mlflow run . \
+          -P activation=selu \
+          -P batch=64 \
+          -P dropout=0.8 \
+          -P epochs=50 \
+          -P factors=500 \
+          -P lr=0.0001 \
+          -P name=cdae \
+          -P reg=0.0001
+```
+
+![Steam](docs/model_summary_1.png)
+
+##### 3. Deep AutoEncoder for Collaborative Filtering
+
+> KUCHAIEV, Oleksii; GINSBURG, Boris. 
+> Training deep autoencoders for collaborative filtering. 
+> arXiv preprint arXiv:1708.01715, 2017. 
+> https://arxiv.org/pdf/1708.01715.pdf
+
+Run training:
+```
+$ mlflow run . \
+          -P activation=selu \
+          -P batch=64 \
+          -P dropout=0.8 \
+          -P epochs=50 \
+          -P layers='[512,256,512]' \
+          -P lr=0.0001 \
+          -P name=auto_enc_content \
+          -P reg=0.01
+```
+
+![Steam](docs/model_summary_2.png)
+
+##### 4. Deep AutoEncoder for Collaborative Filtering With Content Information
+
+This model is an adaptation of the model presented previously, but adding content information. In this way the model is a Hybrid implementation.
+
+In this model I add the 'game name' of all games that the user has already played as additional information for collaborative filtering. This is a way to add content information to the user level.
 
 ```
 $ mlflow run . \
-        -P name=auto_enc \
-        -P layers='[512,256,512]' \
-        -P epochs=50 \
-        -P batch=64 \
-        -P activation=selu \
-        -P dropout=0.8 \
-        -P lr=0.0001 \
-        -P reg=0.01
+          -P activation=selu \
+          -P batch=64 \
+          -P dropout=0.8 \
+          -P epochs=50 \
+          -P layers='[512,256,512]' \
+          -P lr=0.0001 \
+          -P name=auto_enc \
+          -P reg=0.01
 ```
 
-##### Training Results
+![Steam](docs/model_summary_3.png)
+
+#### Training Results
 
 After the trained model, the artifacts (model, metrics, graphics, logs) will be saved in `./mlruns/0/<UID>/`
 
@@ -141,6 +206,11 @@ If you want to run the training for all models, run the script `$ ./train_all.sh
 
 All models were evaluated with different RecSys metrics.
 
+![Metrics](docs/all_metrics_plot.png)
+
+```
+$ mlflow ui
+```
 ![Metrics](docs/all_metrics.png)
 
 ### Recommender
@@ -183,87 +253,6 @@ $ mlflow run . -e recommender \
 8  0.857984        4240                         Terraria
 9  0.840588        2055                      Half-Life 2
 ```
-
-## Implemented Recommender Models
-
-**This is an adapted implementation of the original article, simplifying some features for a better understanding of the models.**
-
-#### 1. Popularity Model
-
-This model makes recommendations using the most popular games, the ones that had the most purchases in a period. This recommendation is not personalized, that is, it is the same for all users
-
-This is a Base Model that will be used to compare with AutoEncoders Models. 
-
-Run training:
-```
-$ mlflow run . -e popularity_train
-```
-
-#### 2. CDAE - Collaborative Denoising Auto-Encoders for Top-N Recommender Systems
-
-> Yao Wu, Christopher DuBois, Alice X. Zheng, Martin Ester. 
-> Collaborative Denoising Auto-Encoders for Top-N Recommender Systems.
-> The 9th ACM International Conference on Web Search and Data Mining (WSDM'16), p153--162, 2016.  
-> http://alicezheng.org/papers/wsdm16-cdae.pdf
-
-Run training:
-```
-$ mlflow run . \
-          -P activation=selu \
-          -P batch=64 \
-          -P dropout=0.8 \
-          -P epochs=50 \
-          -P factors=500 \
-          -P lr=0.0001 \
-          -P name=cdae \
-          -P reg=0.0001
-```
-
-![Steam](docs/model_summary_1.png)
-
-#### 3. Deep AutoEncoder for Collaborative Filtering
-
-> KUCHAIEV, Oleksii; GINSBURG, Boris. 
-> Training deep autoencoders for collaborative filtering. 
-> arXiv preprint arXiv:1708.01715, 2017. 
-> https://arxiv.org/pdf/1708.01715.pdf
-
-
-Run training:
-```
-$ mlflow run . \
-          -P activation=selu \
-          -P batch=64 \
-          -P dropout=0.8 \
-          -P epochs=50 \
-          -P layers='[512,256,512]' \
-          -P lr=0.0001 \
-          -P name=auto_enc_content \
-          -P reg=0.01
-```
-
-![Steam](docs/model_summary_2.png)
-
-#### 4. Deep AutoEncoder for Collaborative Filtering With Content Information
-
-This model is an adaptation of the model presented previously, but adding content information. In this way the model is a Hybrid implementation.
-
-In this model I add the 'game name' of all games that the user has already played as additional information for collaborative filtering. This is a way to add content information to the user level.
-
-```
-$ mlflow run . \
-          -P activation=selu \
-          -P batch=64 \
-          -P dropout=0.8 \
-          -P epochs=50 \
-          -P layers='[512,256,512]' \
-          -P lr=0.0001 \
-          -P name=auto_enc \
-          -P reg=0.01
-
-```
-
-![Steam](docs/model_summary_3.png)
 
 ## Rerefences
 
