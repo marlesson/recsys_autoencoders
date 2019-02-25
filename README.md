@@ -204,14 +204,14 @@ If you want to run the training for all models, run the script `$ ./train_all.sh
 
 ### Evaluation
 
-All models were evaluated with different RecSys metrics.
-
-![Metrics](docs/all_metrics_plot.png)
+All models were evaluated with different RecSys metrics. After train use Mlflow to view metrics in UI.
 
 ```
 $ mlflow ui
 ```
 ![Metrics](docs/all_metrics.png)
+
+![Metrics](docs/all_metrics_plot.png)
 
 ### Recommender
 
