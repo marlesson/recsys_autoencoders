@@ -10,13 +10,14 @@ Collaborative Filtering is a method used by recommender systems to make predicti
 * [Getting Started](#getting-started)
   * Datasets
   * Data Preparation
-  * Model Training
+  * [Model Training](#model-training)
+    * Implemented Recommender Models
+      * Popularity Model
+      * CDAE - Collaborative Denoising Auto-Encoders for Top-N Recommender Systems
+      * Deep AutoEncoder for Collaborative Filtering
+      * Deep AutoEncoder for Collaborative Filtering With Content Information
+  * Evaluation
   * Recommender
-* [Implemented Recommender Models](#implemented-recommender-models)
-  * Popularity Model
-  * CDAE - Collaborative Denoising Auto-Encoders for Top-N Recommender Systems
-  * Deep AutoEncoder for Collaborative Filtering
-  * Deep AutoEncoder for Collaborative Filtering With Content Information
 * [Rerefences](#rerefences)
 
 ## Requirements
