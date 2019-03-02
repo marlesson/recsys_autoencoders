@@ -1,7 +1,5 @@
 __pycache__/
 mlruns/*
 .ipynb_checkpoints
-data/*
-!data/raw
 derby.log
 metastore_db
