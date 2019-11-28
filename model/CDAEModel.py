@@ -1,12 +1,16 @@
-from keras.optimizers import Adam, RMSprop
-from keras.layers import Input, Dense, Embedding, Flatten, Dropout, merge, Activation
-from keras.models import Model
-from keras.regularizers import l2
-from keras import backend as K
-from keras import regularizers
-from keras.callbacks import ModelCheckpoint, EarlyStopping
-from keras import initializers
-from keras.layers import add
+#
+#
+#
+#
+# 
+import tensorflow as tf
+
+from tensorflow.keras.optimizers import Adam, RMSprop
+from tensorflow.keras.layers import Input, Dense, Embedding, Flatten, Dropout, Activation
+from tensorflow.keras.regularizers import l2
+from tensorflow.keras import backend as K
+from tensorflow.keras.layers import add
+from tensorflow.keras.models import Model
 from model.BaseModel import BaseModel
 import numpy as np
 

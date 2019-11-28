@@ -8,17 +8,8 @@ import mlflow.keras
 from util import *
 from contextlib import redirect_stdout
 
-import keras
-from keras.optimizers import Adam, RMSprop
-from keras.layers import Input, Dense, Embedding, Flatten, Dropout, merge, Activation
-from keras.models import Model
-from keras.regularizers import l2
-from keras import backend as K
-from keras import regularizers
-from keras.callbacks import ModelCheckpoint, EarlyStopping
-from keras import initializers
-from keras.preprocessing.text import one_hot
-from keras.preprocessing.sequence import pad_sequences
+import tensorflow as tf
+from tensorflow import keras
 
 from evaluation.model_evaluator import *
 from model.CDAEModel import *

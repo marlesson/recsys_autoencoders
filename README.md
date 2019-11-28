@@ -6,35 +6,35 @@ Collaborative Filtering is a method used by recommender systems to make predicti
 
 ![Steam](docs/background.png)
 
-* [Requirements](#requirements)
-* [Getting Started](#getting-started)
-  * Datasets
-  * Data Preparation
-  * [Model Training](#model-training)
-    * Implemented Recommender Models
-      * Popularity Model
-      * CDAE - Collaborative Denoising Auto-Encoders for Top-N Recommender Systems
-      * Deep AutoEncoder for Collaborative Filtering
-      * Deep AutoEncoder for Collaborative Filtering With Content Information
-  * Evaluation
-  * Recommender
-* [Rerefences](#rerefences)
+- [Deep AutoEncoders for Collaborative Filtering](#deep-autoencoders-for-collaborative-filtering)
+  - [Requirements](#requirements)
+  - [Getting Started](#getting-started)
+    - [Datasets](#datasets)
+    - [Data Preparation](#data-preparation)
+    - [Model Training](#model-training)
+      - [Implemented Recommender Models](#implemented-recommender-models)
+        - [1. Popularity Model](#1-popularity-model)
+        - [2. CDAE - Collaborative Denoising Auto-Encoders for Top-N Recommender Systems](#2-cdae---collaborative-denoising-auto-encoders-for-top-n-recommender-systems)
+        - [3. Deep AutoEncoder for Collaborative Filtering](#3-deep-autoencoder-for-collaborative-filtering)
+        - [4. Deep AutoEncoder for Collaborative Filtering With Content Information](#4-deep-autoencoder-for-collaborative-filtering-with-content-information)
+      - [Training Results](#training-results)
+    - [Evaluation](#evaluation)
+    - [Recommender](#recommender)
+  - [Rerefences](#rerefences)
 
 ## Requirements
 
 Create a conda env from ```conda.yaml```
 
 * python=3.6
-* keras=2.1.5
-* tensorflow==1.7.0  
-* mlflow
-* pandas=0.22.0
-* scikit-learn=0.19.1
 * cloudpickle=0.6.1
-* numpy=1.14.3
+* numpy=1.16.4
+* pandas=0.24.2
+* scikit-learn=0.20.1
 * seaborn=0.9
 * click=6.7
-* scipy=1.0.1
+* tensorflow-gpu==2.0
+* scipy=1.2.1
 * graphviz
 * pydotplus
 
